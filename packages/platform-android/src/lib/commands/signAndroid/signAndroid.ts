@@ -11,7 +11,6 @@ import {
   spawn,
   spinner,
 } from '@rnef/tools';
-import AdmZip from 'adm-zip';
 import { findAndroidBuildTool, getAndroidBuildToolsPath } from '../../paths.js';
 import { buildJsBundle } from './bundle.js';
 
@@ -65,14 +64,12 @@ export async function signAndroid(options: SignAndroidOptions) {
 
   loader.start('Initializing output APK...');
   try {
-    const zip = new AdmZip(options.apkPath);
-    // Remove old signature files
-    zip.deleteFile('META-INF/*');
-    zip.writeZip(tempApkPath);
+    fs.mkdirSync(tempPath, { recursive: true });
+    fs.copyFileSync(options.apkPath, tempApkPath);
   } catch (error) {
     throw new RnefError(
       `Failed to initialize output APK file: ${options.outputPath}`,
-      { cause: (error as SubprocessError).stderr }
+      { cause: error }
     );
   }
   loader.stop(`Initialized output APK.`);
@@ -141,11 +138,24 @@ async function replaceJsBundle({
   apkPath,
   jsBundlePath,
 }: ReplaceJsBundleOptions) {
+  const tempPath = path.dirname(apkPath);
   try {
-    const zip = new AdmZip(apkPath);
-    zip.deleteFile('assets/index.android.bundle');
-    zip.addLocalFile(jsBundlePath, 'assets', 'index.android.bundle');
-    zip.writeZip(apkPath);
+    fs.mkdirSync(path.join(tempPath, 'assets'), { recursive: true });
+
+    const tempBundlePath = path.join(
+      tempPath,
+      'assets',
+      'index.android.bundle'
+    );
+    fs.copyFileSync(jsBundlePath, tempBundlePath);
+
+    // Delete the existing bundle
+    await spawn('zip', ['-d', apkPath, 'assets/index.android.bundle']);
+
+    // Add the new bundle with the correct path structure
+    await spawn('zip', ['-r', apkPath, 'assets'], {
+      cwd: tempPath,
+    });
   } catch (error) {
     throw new RnefError(
       `Failed to replace JS bundle in destination file: ${apkPath}}`,
