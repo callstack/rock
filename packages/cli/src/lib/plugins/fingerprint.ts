@@ -38,7 +38,7 @@ export async function nativeFingerprintCommand(
       JSON.stringify(
         {
           hash: fingerprint.hash,
-          sources: fingerprint.sources.filter((source) => source.hash != null),
+          sources: fingerprint.inputs.filter((source) => source.hash != null),
         },
         null,
         2,
@@ -67,7 +67,7 @@ export async function nativeFingerprintCommand(
   logger.debug(
     'Sources:',
     JSON.stringify(
-      fingerprint.sources.filter((source) => source.hash != null),
+      fingerprint.inputs.filter((source) => source.hash != null),
       null,
       2,
     ),

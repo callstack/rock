@@ -1,10 +1,7 @@
 import { color, colorLink } from '../color.js';
 import type { RockError } from '../error.js';
-import {
-  DEFAULT_IGNORE_PATHS,
-  EXPO_DEFAULT_IGNORE_PATHS,
-  type FingerprintSources,
-} from '../fingerprint/index.js';
+import { IGNORE_PATHS } from '../fingerprint/constants.js';
+import { type FingerprintSources } from '../fingerprint/index.js';
 import logger from '../logger.js';
 import { spawn } from '../spawn.js';
 import type { RemoteBuildCache } from './common.js';
@@ -82,8 +79,7 @@ async function warnIgnoredFiles(
 
   const ignorePaths = [
     ...(fingerprintOptions?.ignorePaths ?? []),
-    ...EXPO_DEFAULT_IGNORE_PATHS,
-    ...DEFAULT_IGNORE_PATHS,
+    ...IGNORE_PATHS,
   ];
   const { output } = await spawn('git', [
     'clean',
