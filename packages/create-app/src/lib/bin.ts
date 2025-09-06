@@ -336,9 +336,10 @@ export default {${
     ${platformsWithImports
       .map((template) => `${template.name}: ${template.importName}(),`)
       .join('\n    ')}
-  },
-  remoteCacheProvider: ${
-    remoteCacheProvider === null ? null : `'${remoteCacheProvider}'`
+  }${
+    remoteCacheProvider !== null
+      ? `,\n  remoteCacheProvider: '${remoteCacheProvider}'`
+      : ''
   },
 };
 `;
