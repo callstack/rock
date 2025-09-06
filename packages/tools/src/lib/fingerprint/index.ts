@@ -56,7 +56,13 @@ export async function nativeFingerprint(
   }
 
   const fingerprint = await calculateFingerprint(projectRoot, {
-    include: [rnPackageJSONPath, ...folders, options.extraSources],
+    include: [
+      path.relative(projectRoot, rnPackageJSONPath),
+      ...folders.map((folder) => path.relative(projectRoot, folder)),
+      ...options.extraSources.map((source) =>
+        path.relative(projectRoot, source),
+      ),
+    ],
     extraInputs: [
       { key: 'scripts', json: scripts },
       { key: 'autolinkingSources', json: autolinkingConfig },

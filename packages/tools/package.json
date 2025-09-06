@@ -22,7 +22,7 @@
     "adm-zip": "^0.5.16",
     "appdirsjs": "^1.2.7",
     "fast-glob": "^3.3.2",
-    "fs-fingerprint": "^0.4.0",
+    "fs-fingerprint": "^0.4.1",
     "is-unicode-supported": "^2.1.0",
     "nano-spawn": "^0.2.0",
     "picocolors": "^1.1.1",

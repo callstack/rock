@@ -28,7 +28,7 @@
     "@rock-js/tools": "^0.10.1",
     "adm-zip": "^0.5.16",
     "commander": "^12.1.0",
-    "fs-fingerprint": "^0.4.0",
+    "fs-fingerprint": "^0.4.1",
     "tar": "^7.4.3",
     "tslib": "^2.3.0"
   },
