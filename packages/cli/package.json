@@ -23,11 +23,12 @@
     "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
   },
   "dependencies": {
-    "adm-zip": "^0.5.16",
     "@react-native-community/cli-config": "^20.0.0",
     "@rock-js/config": "^0.10.1",
     "@rock-js/tools": "^0.10.1",
+    "adm-zip": "^0.5.16",
     "commander": "^12.1.0",
+    "fs-fingerprint": "^0.5.0",
     "tar": "^7.4.3",
     "tslib": "^2.3.0"
   },
