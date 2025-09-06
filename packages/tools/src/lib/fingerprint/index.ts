@@ -60,7 +60,7 @@ export async function nativeFingerprint(
       path.relative(projectRoot, rnPackageJSONPath),
       ...folders.map((folder) => path.relative(projectRoot, folder)),
       ...options.extraSources.map((source) =>
-        path.relative(projectRoot, source),
+        path.isAbsolute(source) ? path.relative(projectRoot, source) : source,
       ),
     ],
     extraInputs: [
