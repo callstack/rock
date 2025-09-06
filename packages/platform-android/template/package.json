@@ -4,6 +4,6 @@
     "android": "rock run:android"
   },
   "devDependencies": {
-    "@rock-js/platform-android": "^0.10.1"
+    "@rock-js/platform-android": "^0.10.2"
   }
 }

@@ -7,6 +7,6 @@
     "@callstack/react-native-brownfield": "^1.2.0"
   },
   "devDependencies": {
-    "@rock-js/plugin-brownfield-ios": "^0.10.1"
+    "@rock-js/plugin-brownfield-ios": "^0.10.2"
   }
 }

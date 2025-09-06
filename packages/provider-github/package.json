@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/provider-github",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -17,7 +17,7 @@
     "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
   },
   "dependencies": {
-    "@rock-js/tools": "^0.10.1",
+    "@rock-js/tools": "^0.10.2",
     "ts-regex-builder": "^1.8.2",
     "tslib": "^2.3.0"
   },

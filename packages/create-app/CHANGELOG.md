@@ -1,5 +1,15 @@
 # create-rock
 
+## 0.10.2
+
+### Patch Changes
+
+- ee95903: chore: add repository informatino for npm
+- 1062e4b: Updated the cliFile regex and add a warning when the file content cannot be modified.
+- 72bcd0b: Skip adding `plugins` property if no plugins
+- Updated dependencies [ee95903]
+  - @rock-js/tools@0.10.2
+
 ## 0.10.1
 
 ### Patch Changes

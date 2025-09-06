@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/platform-apple-helpers",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -19,7 +19,7 @@
   "dependencies": {
     "@react-native-community/cli-config": "^20.0.0",
     "@react-native-community/cli-config-apple": "^20.0.0",
-    "@rock-js/tools": "^0.10.1",
+    "@rock-js/tools": "^0.10.2",
     "@types/adm-zip": "^0.5.7",
     "adm-zip": "^0.5.16",
     "fast-glob": "^3.3.2",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@react-native-community/cli-types": "^20.0.0",
-    "@rock-js/config": "^0.10.1"
+    "@rock-js/config": "^0.10.2"
   },
   "publishConfig": {
     "access": "public"

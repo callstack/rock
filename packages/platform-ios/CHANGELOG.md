@@ -1,5 +1,14 @@
 # @rnef/platform-ios
 
+## 0.10.2
+
+### Patch Changes
+
+- ee95903: chore: add repository informatino for npm
+- Updated dependencies [ee95903]
+  - @rock-js/platform-apple-helpers@0.10.2
+  - @rock-js/tools@0.10.2
+
 ## 0.10.1
 
 ### Patch Changes

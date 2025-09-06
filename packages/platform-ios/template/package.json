@@ -4,6 +4,6 @@
     "ios": "rock run:ios"
   },
   "devDependencies": {
-    "@rock-js/platform-ios": "^0.10.1"
+    "@rock-js/platform-ios": "^0.10.2"
   }
 }

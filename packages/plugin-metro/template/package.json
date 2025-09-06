@@ -1,7 +1,7 @@
 {
   "name": "rock-plugin-metro-template",
   "devDependencies": {
-    "@rock-js/plugin-metro": "^0.10.1",
+    "@rock-js/plugin-metro": "^0.10.2",
     "@react-native/metro-config": "0.81.1"
   }
 }

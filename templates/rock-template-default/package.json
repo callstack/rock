@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/template-default",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "scripts": {
     "start": "rock start",
     "lint": "eslint .",
@@ -14,8 +14,8 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "rock": "^0.10.1",
-    "@rock-js/welcome-screen": "^0.10.1",
+    "rock": "^0.10.2",
+    "@rock-js/welcome-screen": "^0.10.2",
     "@expo/fingerprint": "^0.11.6",
     "@react-native/babel-preset": "0.81.1",
     "@react-native/eslint-config": "0.81.1",

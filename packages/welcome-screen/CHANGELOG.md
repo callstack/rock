@@ -1,5 +1,11 @@
 # @rnef/welcome-screen
 
+## 0.10.2
+
+### Patch Changes
+
+- ee95903: chore: add repository informatino for npm
+
 ## 0.10.1
 
 ### Patch Changes
