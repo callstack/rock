@@ -5,6 +5,7 @@ import {
   note,
   outro,
   promptConfirm,
+  promptGroup,
   promptMultiselect,
   promptSelect,
   promptText,
@@ -23,9 +24,9 @@ export function printHelpMessage(
 ) {
   console.log(`
      Usage: create-rock [options]
-  
+
      Options:
-     
+
        -h, --help                 Display help for command
        -v, --version              Output the version number
        -d, --dir                  Create project in specified directory
@@ -36,7 +37,7 @@ export function printHelpMessage(
        --remote-cache-provider    Specify remote cache provider
        --override                 Override files in target directory
        --install                  Install Node.js dependencies
-     
+
      Available templates:
        ${templates.map((t) => t.name).join(', ')}
 
@@ -159,19 +160,54 @@ export function promptBundlers(
   });
 }
 
-export function promptRemoteCacheProvider(): Promise<SupportedRemoteCacheProviders | null> {
-  return promptSelect({
-    message: 'Which remote cache provider do you want to use?',
+export function promptRemoteCacheProvider() {
+  return promptSelect<SupportedRemoteCacheProviders | null>({
+    message: 'Where do you store or intend to store remote build cache?',
     initialValue: 'github-actions',
     options: [
       {
         value: 'github-actions',
         label: 'GitHub Actions',
-        hint: 'Enable builds on your CI',
       },
-      { value: null, label: 'None', hint: 'Local builds only' },
+      {
+        value: 's3',
+        label: 'Amazon S3',
+      },
+      {
+        value: null,
+        label: 'None',
+        hint: 'Local cache only',
+      },
     ],
-  }) as Promise<SupportedRemoteCacheProviders | null>;
+  });
+}
+
+export function promptRemoteCacheProviderArgs(
+  provider: SupportedRemoteCacheProviders,
+) {
+  switch (provider) {
+    case 'github-actions':
+      return promptGroup({
+        owner: () => promptText({ message: 'GitHub repository owner' }),
+        repo: () => promptText({ message: 'GitHub repository name' }),
+        token: () =>
+          promptText({
+            message: 'GitHub Personal Access Token (PAT)',
+            placeholder: 'GITHUB_TOKEN',
+            defaultValue: 'GITHUB_TOKEN'
+          }),
+      });
+    case 's3':
+      return promptGroup({
+        bucket: () =>
+          promptText({ message: 'Bucket name', placeholder: 'bucket-name' }),
+        region: () =>
+          promptText({
+            message: 'Region',
+            placeholder: 'us-west-1',
+          }),
+      });
+  }
 }
 
 export function confirmOverrideFiles(targetDir: string) {

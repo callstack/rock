@@ -15,7 +15,6 @@ test('should format config without plugins', () => {
           ios: platformIOS(),
           android: platformAndroid(),
         },
-        remoteCacheProvider: null,
       };
       "
     `);
@@ -33,11 +32,16 @@ test('should format config with plugins', () => {
     },
   ];
 
-  expect(formatConfig([PLATFORMS[0]], plugins, BUNDLERS[1], 'github-actions'))
-    .toMatchInlineSnapshot(`
+  expect(
+    formatConfig([PLATFORMS[0]], plugins, BUNDLERS[1], {
+      name: 'github-actions',
+      args: { owner: 'custom-owner', repo: 'repo-name', token: 'GITHUB_TOKEN' },
+    }),
+  ).toMatchInlineSnapshot(`
       "import { platformIOS } from '@rock-js/platform-ios';
       import { pluginTest } from '@rock-js/plugin-test';
       import { pluginRepack } from '@rock-js/plugin-repack';
+      import { providerGithubActions } from '@rock-js/provider-github-actions';
 
       export default {
         plugins: [
@@ -47,7 +51,11 @@ test('should format config with plugins', () => {
         platforms: {
           ios: platformIOS(),
         },
-        remoteCacheProvider: 'github-actions',
+        remoteCacheProvider: providerGithubActions({
+          owner: "custom-owner",
+          repo: "repo-name",
+          token: process.env['GITHUB_TOKEN'],
+        }),
       };
       "
     `);
