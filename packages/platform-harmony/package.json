@@ -1,0 +1,44 @@
+{
+  "name": "@rock-js/platform-harmony",
+  "version": "0.11.1",
+  "type": "module",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    "types": "./dist/src/index.d.ts",
+    "default": "./dist/src/index.js"
+  },
+  "files": [
+    "dist",
+    "template",
+    "react-native.config.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.lib.json",
+    "dev": "tsc -p tsconfig.lib.json --watch",
+    "publish:npm": "npm publish --access public",
+    "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
+  },
+  "dependencies": {
+    "@react-native-community/cli-config-android": "^20.0.0",
+    "@rock-js/tools": "^0.11.1",
+    "adm-zip": "^0.5.16",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@react-native-community/cli-types": "^20.0.0",
+    "@rock-js/config": "^0.11.1",
+    "@types/adm-zip": "^0.5.7"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/callstack/rock.git",
+    "directory": "packages/platform-harmony"
+  },
+  "homepage": "https://rockjs.dev",
+  "bugs": "https://github.com/callstack/rock/issues",
+  "license": "MIT",
+  "author": "Callstack <incubator@callstack.com>"
+}
