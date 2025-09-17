@@ -1,0 +1,9 @@
+{
+  "name": "rock-platform-harmony-template",
+  "scripts": {
+    "android": "rock run:android"
+  },
+  "devDependencies": {
+    "@rock-js/platform-harmony": "^0.11.1"
+  }
+}
