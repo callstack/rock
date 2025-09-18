@@ -1,5 +1,13 @@
 # @rnef/platform-ios
 
+## 0.11.3
+
+### Patch Changes
+
+- Updated dependencies [a865a55]
+  - @rock-js/platform-apple-helpers@0.11.3
+  - @rock-js/tools@0.11.3
+
 ## 0.11.2
 
 ### Patch Changes

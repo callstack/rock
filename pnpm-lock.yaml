@@ -107,10 +107,10 @@ importers:
         specifier: ^7.26.2
         version: 7.27.1
       '@rock-js/provider-github':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../provider-github
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       joi:
         specifier: ^17.13.3
@@ -120,7 +120,7 @@ importers:
         version: 2.8.1
     devDependencies:
       '@rock-js/test-helpers':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../test-helpers
       '@types/babel__code-frame':
         specifier: ^7.0.6
@@ -162,7 +162,7 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       adm-zip:
         specifier: ^0.5.16
@@ -175,7 +175,7 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/config':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../config
       '@types/adm-zip':
         specifier: ^0.5.7
@@ -190,7 +190,7 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       '@types/adm-zip':
         specifier: ^0.5.7
@@ -212,7 +212,7 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/config':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../config
 
   packages/platform-ios:
@@ -224,17 +224,17 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/platform-apple-helpers':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../platform-apple-helpers
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
       '@rock-js/config':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../config
 
   packages/plugin-brownfield-android:
@@ -243,10 +243,10 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/platform-android':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../platform-android
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       tslib:
         specifier: ^2.3.0
@@ -256,7 +256,7 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/config':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../config
 
   packages/plugin-brownfield-ios:
@@ -268,17 +268,17 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/platform-apple-helpers':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../platform-apple-helpers
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
       '@rock-js/config':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../config
 
   packages/plugin-metro:
@@ -287,7 +287,7 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       metro:
         specifier: ^0.83.1
@@ -312,7 +312,7 @@ importers:
         specifier: ^0.81.1
         version: 0.81.1
       '@rock-js/config':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../config
 
   packages/plugin-repack:
@@ -321,7 +321,7 @@ importers:
         specifier: '>=5'
         version: 5.1.3(@babel/core@7.25.2)(@rspack/core@1.4.11(@swc/helpers@0.5.17))(react-native@0.81.1(@babel/core@7.25.2)(@react-native/metro-config@0.81.0(@babel/core@7.25.2))(@types/react@19.1.9)(react@19.1.1))(webpack@5.96.1)
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       '@rspack/core':
         specifier: '>=1.2.8'
@@ -334,13 +334,13 @@ importers:
         version: 2.8.1
     devDependencies:
       '@rock-js/config':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../config
 
   packages/provider-github:
     dependencies:
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       ts-regex-builder:
         specifier: ^1.8.2
@@ -367,7 +367,7 @@ importers:
         specifier: ^3.830.0
         version: 3.864.0
       '@rock-js/tools':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../tools
       tslib:
         specifier: ^2.3.0
@@ -419,7 +419,7 @@ importers:
         version: 2.8.1
     devDependencies:
       '@rock-js/test-helpers':
-        specifier: ^0.11.2
+        specifier: ^0.11.3
         version: link:../test-helpers
 
   packages/welcome-screen:
