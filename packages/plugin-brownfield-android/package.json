@@ -1,6 +1,6 @@
 {
   "name": "@rock-js/plugin-brownfield-android",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -19,13 +19,13 @@
     "publish:verdaccio": "npm publish --registry http://localhost:4873 --userconfig ../../.npmrc"
   },
   "dependencies": {
-    "@rock-js/tools": "^0.11.2",
-    "@rock-js/platform-android": "^0.11.2",
+    "@rock-js/tools": "^0.11.3",
+    "@rock-js/platform-android": "^0.11.3",
     "@react-native-community/cli-config-android": "^20.0.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@rock-js/config": "^0.11.2",
+    "@rock-js/config": "^0.11.3",
     "@react-native-community/cli-types": "^20.0.0"
   },
   "publishConfig": {

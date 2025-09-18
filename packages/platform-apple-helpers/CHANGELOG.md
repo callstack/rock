@@ -1,5 +1,12 @@
 # @rnef/platform-apple-helpers
 
+## 0.11.3
+
+### Patch Changes
+
+- a865a55: fix: ensure RCT_USE_RN_DEP and RCT_USE_PREBUILT_RNCORE are only set for RN 0.81"
+  - @rock-js/tools@0.11.3
+
 ## 0.11.2
 
 ### Patch Changes
