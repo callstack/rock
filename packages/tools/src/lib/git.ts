@@ -55,3 +55,11 @@ export async function isGitRepo(path: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function isGitDirty(dir: string) {
+  const { output } = await spawn('git', ['status', '--porcelain'], {
+    cwd: dir,
+  });
+
+  return output.trim() !== '';
+}

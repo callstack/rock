@@ -11,10 +11,10 @@ import {
   relativeToCwd,
   RockError,
   type SupportedRemoteCacheProviders,
+  validateProjectName,
 } from '@rock-js/tools';
 import { vice } from 'gradient-string';
 import type { TemplateInfo } from '../templates.js';
-import { validateProjectName } from './project-name.js';
 import { getRockVersion } from './version.js';
 
 export function printHelpMessage(

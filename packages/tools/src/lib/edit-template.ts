@@ -33,6 +33,11 @@ export function replacePlaceholder(
   }
 
   for (const filePath of walkDirectory(projectPath).reverse()) {
+    // Skip anything inside node_modules
+    if (filePath.split(path.sep).includes('node_modules')) {
+      continue;
+    }
+
     if (!fs.statSync(filePath).isDirectory()) {
       replacePlaceholderInTextFile(filePath, normalizedName);
     }
