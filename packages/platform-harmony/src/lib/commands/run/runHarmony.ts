@@ -1,13 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type {
-  AndroidProjectConfig,
-  Config,
-} from '@react-native-community/cli-types';
+import type { Config } from '@react-native-community/cli-types';
 import type { FingerprintSources, RemoteBuildCache } from '@rock-js/tools';
 import {
   color,
-  formatArtifactName,
+  // formatArtifactName,
   intro,
   isInteractive,
   logger,
@@ -17,26 +14,21 @@ import {
   spinner,
 } from '@rock-js/tools';
 import { getBinaryPath } from '@rock-js/tools';
-import type { BuildFlags } from '../buildAndroid/buildAndroid.js';
-import { options } from '../buildAndroid/buildAndroid.js';
-import { runGradle } from '../runGradle.js';
-import { toPascalCase } from '../toPascalCase.js';
+import type { BuildFlags } from '../build/buildHarmony.js';
+import { options } from '../build/buildHarmony.js';
+import { runHvigor } from '../runHvigor.js';
 import { getDevices } from './hdc.js';
-import type { DeviceData } from './listAndroidDevices.js';
-import { listAndroidDevices } from './listAndroidDevices.js';
+import type { DeviceData } from './listHarmonyDevices.js';
+import { listHarmonyDevices } from './listHarmonyDevices.js';
 import { tryInstallAppOnDevice } from './tryInstallAppOnDevice.js';
 import { tryLaunchAppOnDevice } from './tryLaunchAppOnDevice.js';
 // import { tryLaunchEmulator } from './tryLaunchEmulator.js';
 
 export interface Flags extends BuildFlags {
-  appId: string;
-  appIdSuffix: string;
-  mainActivity?: string;
+  ability: string;
   port: string;
   device?: string;
   binaryPath?: string;
-  user?: string;
-  local?: boolean;
 }
 
 export type AndroidProject = NonNullable<Config['project']['android']>;
@@ -45,7 +37,10 @@ export type AndroidProject = NonNullable<Config['project']['android']>;
  * Starts the app on a connected Android emulator or device.
  */
 export async function runHarmony(
-  androidProject: AndroidProjectConfig,
+  harmonyConfig: {
+    sourceDir: string;
+    bundleName: string;
+  },
   args: Flags,
   projectRoot: string,
   remoteCacheProvider: null | (() => RemoteBuildCache) | undefined,
@@ -54,20 +49,20 @@ export async function runHarmony(
   intro('Running Android app');
 
   normalizeArgs(args, projectRoot);
-
-  const devices = await listAndroidDevices();
+  const { sourceDir, bundleName } = harmonyConfig;
+  const devices = await listHarmonyDevices();
   const device = await selectDevice(devices, args);
 
-  const mainTaskType = device ? 'assemble' : 'install';
-  const tasks = args.tasks ?? [`${mainTaskType}${toPascalCase(args.variant)}`];
-
-  const artifactName = await formatArtifactName({
-    // @ts-expect-error udpate type
-    platform: 'harmony',
-    traits: [args.variant],
-    root: projectRoot,
-    fingerprintOptions,
-  });
+  // const artifactName = await formatArtifactName({
+  //   // @ts-expect-error udpate type
+  //   platform: 'harmony',
+  //   traits: [args.buildMode],
+  //   root: projectRoot,
+  //   fingerprintOptions,
+  // });
+  // @todo fix this
+  const artifactName =
+    'rock-harmony-debug-d73f224c4af1eb225df06c03714e0295e24b55b3';
   const binaryPath = await getBinaryPath({
     platformName: 'harmony',
     artifactName,
@@ -75,7 +70,7 @@ export async function runHarmony(
     localFlag: args.local,
     remoteCacheProvider,
     fingerprintOptions,
-    sourceDir: androidProject.sourceDir,
+    sourceDir: sourceDir,
   });
 
   if (device) {
@@ -85,11 +80,13 @@ export async function runHarmony(
     // }
     if (device.deviceId) {
       if (!binaryPath) {
-        await runGradle({ tasks, androidProject, args, artifactName });
+        // @todo fix sourceDir
+        await runHvigor({ sourceDir, args, artifactName, device, bundleName });
       }
-      await runOnDevice({ device, androidProject, args, tasks, binaryPath });
+      await runOnDevice({ device, sourceDir, args, binaryPath, bundleName });
     }
   } else {
+    // @todo consider filtering out offline devices
     if ((await getDevices()).length === 0) {
       if (isInteractive()) {
         await selectAndLaunchDevice();
@@ -103,12 +100,13 @@ export async function runHarmony(
     }
 
     if (!binaryPath) {
-      await runGradle({ tasks, androidProject, args, artifactName });
+      // @todo revisit
+      await runHvigor({ sourceDir, args, artifactName, bundleName });
     }
 
-    for (const device of await listAndroidDevices()) {
+    for (const device of await listHarmonyDevices()) {
       if (device.connected) {
-        await runOnDevice({ device, androidProject, args, tasks, binaryPath });
+        await runOnDevice({ device, sourceDir, args, binaryPath, bundleName });
       }
     }
   }
@@ -117,13 +115,13 @@ export async function runHarmony(
 }
 
 async function selectAndLaunchDevice() {
-  const allDevices = await listAndroidDevices();
+  const allDevices = await listHarmonyDevices();
   const device = await promptForDeviceSelection(allDevices);
 
   if (!device.connected) {
     // await tryLaunchEmulator(device.readableName);
     // list devices once again when emulator is booted
-    const allDevices = await listAndroidDevices();
+    const allDevices = await listHarmonyDevices();
     const newDevice =
       allDevices.find((d) => d.readableName === device.readableName) ?? device;
     return newDevice;
@@ -150,33 +148,7 @@ function matchingDevice(devices: Array<DeviceData>, deviceArg: string) {
 }
 
 function normalizeArgs(args: Flags, projectRoot: string) {
-  if (args.tasks && args.variant) {
-    logger.warn(
-      'Both "--tasks" and "--variant" parameters were passed. Using "--tasks" for building the app.',
-    );
-  }
-
-  if (!args.variant) {
-    args.variant = 'debug';
-  }
-
-  // turn on activeArchOnly for debug to speed up local builds
-  if (
-    args.variant !== 'release' &&
-    !args.variant.endsWith('Release') &&
-    args.activeArchOnly === undefined &&
-    isInteractive()
-  ) {
-    args.activeArchOnly = true;
-  }
-
   if (args.binaryPath) {
-    if (args.tasks) {
-      throw new RockError(
-        'Both "--binary-path" and "--tasks" flags were specified, which are incompatible. Please specify only one.',
-      );
-    }
-
     args.binaryPath = path.isAbsolute(args.binaryPath)
       ? args.binaryPath
       : path.join(projectRoot, args.binaryPath);
@@ -194,7 +166,7 @@ async function promptForDeviceSelection(
 ): Promise<DeviceData> {
   if (!allDevices.length) {
     throw new RockError(
-      'No devices and/or emulators connected. Please create emulator with Android Studio or connect Android device.',
+      'No devices and/or emulators connected. Please create emulator with DevEco Studio or connect HarmonyOS device.',
     );
   }
   const selected = await promptSelect({
@@ -212,24 +184,24 @@ async function promptForDeviceSelection(
 
 async function runOnDevice({
   device,
-  androidProject,
+  sourceDir,
   args,
-  tasks,
   binaryPath,
+  bundleName,
 }: {
   device: DeviceData;
-  androidProject: AndroidProject;
+  sourceDir: string;
   args: Flags;
-  tasks: string[];
   binaryPath: string | undefined;
+  bundleName: string;
 }) {
   const loader = spinner();
   loader.start('Installing the app');
-  await tryInstallAppOnDevice(device, androidProject, args, tasks, binaryPath);
+  await tryInstallAppOnDevice(device, sourceDir, args, binaryPath);
   loader.message('Launching the app');
   const { applicationIdWithSuffix } = await tryLaunchAppOnDevice(
     device,
-    androidProject,
+    bundleName,
     args,
   );
   if (applicationIdWithSuffix) {
@@ -253,19 +225,9 @@ export const runOptions = [
     default: process.env['RCT_METRO_PORT'] || '8081',
   },
   {
-    name: '--app-id <string>',
-    description:
-      'Specify an applicationId to launch after build. If not specified, `package` from AndroidManifest.xml will be used.',
-    default: '',
-  },
-  {
-    name: '--app-id-suffix <string>',
-    description: 'Specify an applicationIdSuffix to launch after build.',
-    default: '',
-  },
-  {
-    name: '--main-activity <string>',
-    description: 'Name of the activity to start',
+    name: '--ability <string>',
+    description: 'Name of the ability to start.',
+    default: 'EntryAbility',
   },
   {
     name: '--device <string>',
@@ -276,9 +238,5 @@ export const runOptions = [
     name: '--binary-path <string>',
     description:
       'Path relative to project root where pre-built .apk binary lives.',
-  },
-  {
-    name: '--user <number>',
-    description: 'Id of the User Profile you want to install the app on.',
   },
 ];

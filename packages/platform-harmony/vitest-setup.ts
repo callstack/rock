@@ -53,7 +53,7 @@ vi.mock('@rock-js/tools', async (importOriginal) => {
     formatArtifactName: vi
       .fn()
       .mockResolvedValue(
-        'rock-android-debug-089e8a9887099a309e8a7845e697bbf705353f45',
+        'rock-harmony-debug-089e8a9887099a309e8a7845e697bbf705353f45',
       ),
     spinner: vi.fn(() => ({
       start: vi.fn(),

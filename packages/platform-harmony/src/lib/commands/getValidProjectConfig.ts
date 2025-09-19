@@ -1,14 +1,39 @@
-import { projectConfig } from '@react-native-community/cli-config-android';
-import type { AndroidProjectConfig } from '@react-native-community/cli-types';
+import fs from 'node:fs';
+import path from 'node:path';
 import { RockError } from '@rock-js/tools';
+import json5 from 'json5';
+
+export type HarmonyProjectConfig = {
+  sourceDir: string;
+  bundleName: string;
+};
 
 export function getValidProjectConfig(
   projectRoot: string,
-  pluginConfig?: Partial<AndroidProjectConfig>,
+  pluginConfig?: Partial<HarmonyProjectConfig>,
 ) {
-  const androidConfig = projectConfig(projectRoot, pluginConfig);
-  if (!androidConfig) {
-    throw new RockError('Android project not found.');
+  const sourceDir = pluginConfig?.sourceDir ?? 'harmony';
+  if (!fs.existsSync(path.join(projectRoot, sourceDir))) {
+    throw new RockError(
+      `Harmony project not found under ${path.join(projectRoot, sourceDir)}.`,
+    );
   }
-  return androidConfig;
+  let bundleName: string;
+  try {
+    bundleName = json5.parse(
+      fs.readFileSync(
+        path.join(projectRoot, sourceDir, 'AppScope', 'app.json5'),
+        'utf8',
+      ),
+    ).app.bundleName;
+  } catch (error) {
+    throw new RockError('Error reading app.json5 file.', {
+      cause: error,
+    });
+  }
+
+  return {
+    sourceDir,
+    bundleName,
+  };
 }

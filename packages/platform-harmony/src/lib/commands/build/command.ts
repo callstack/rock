@@ -3,28 +3,27 @@ import {
   getValidProjectConfig,
   type HarmonyProjectConfig,
 } from '../getValidProjectConfig.js';
-import type { Flags } from './runHarmony.js';
-import { runHarmony, runOptions } from './runHarmony.js';
+import type { BuildFlags } from './buildHarmony.js';
+import { buildHarmony, options } from './buildHarmony.js';
 
-export function registerRunCommand(
+export function registerBuildCommand(
   api: PluginApi,
   pluginConfig: Partial<HarmonyProjectConfig> | undefined,
 ) {
   api.registerCommand({
-    name: 'run:harmony',
-    description:
-      'Builds your app and starts it on a connected HarmonyOS Next emulator or a device.',
+    name: 'build:harmony',
+    description: 'Builds your app for HarmonyOS Next platform.',
     action: async (args) => {
       const projectRoot = api.getProjectRoot();
       const harmonyConfig = getValidProjectConfig(projectRoot, pluginConfig);
-      await runHarmony(
+      await buildHarmony(
         harmonyConfig,
-        args as Flags,
+        args as BuildFlags,
         projectRoot,
         await api.getRemoteCacheProvider(),
         api.getFingerprintOptions(),
       );
     },
-    options: runOptions,
+    options: options,
   });
 }

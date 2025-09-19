@@ -1,16 +1,15 @@
 import path from 'node:path';
 import { spawn } from '@rock-js/tools';
+import { getDevEcoSdkPath } from '../../paths.js';
 
 export function getHdcPath() {
-  return process.env['DEVECO_SDK_HOME']
-    ? path.join(
-        process.env['DEVECO_SDK_HOME'],
-        'default',
-        'openharmony',
-        'toolchains',
-        'hdc',
-      )
-    : 'hdc';
+  return path.join(
+    getDevEcoSdkPath(),
+    'default',
+    'openharmony',
+    'toolchains',
+    'hdc',
+  );
 }
 
 /**
@@ -27,9 +26,9 @@ export async function getDevices() {
       const parts = line.split(/\s+/);
       return {
         name: parts[0],
-        method: parts[1],
-        state: parts[2],
-        locate: parts[3],
+        method: parts[1], // USB
+        state: parts[2], // Connected, Offline
+        locate: parts[3], // localhost
         connectTool: parts[4],
       };
     });

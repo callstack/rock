@@ -1,26 +1,25 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-export function getAndroidSdkPath() {
-  const sdkRoot =
-    process.env['ANDROID_HOME'] || process.env['ANDROID_SDK_ROOT'];
+export function getDevEcoSdkPath() {
+  const sdkRoot = process.env['DEVECO_SDK_HOME'];
   if (!sdkRoot) {
     throw new Error(
-      'ANDROID_HOME or ANDROID_SDK_ROOT environment variable is not set. Please follow instructions at: https://reactnative.dev/docs/set-up-your-environment?platform=android',
+      'DEVECO_SDK_HOME environment variable is not set. Please set it and run again',
     );
   }
   return sdkRoot;
 }
 
-export function getAndroidBuildToolsPath() {
-  return path.join(getAndroidSdkPath(), 'build-tools');
+export function getDevEcoBuildToolsPath() {
+  return path.join(getDevEcoSdkPath(), '..', 'tools');
 }
 
 /**
  * Build tools are located in the <sdk-root>/build-tools/<version>/ directory.
  */
 export function findAndroidBuildTool(toolName: string) {
-  const buildToolsPath = path.join(getAndroidBuildToolsPath());
+  const buildToolsPath = path.join(getDevEcoBuildToolsPath());
   const versions = fs
     .readdirSync(buildToolsPath, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())

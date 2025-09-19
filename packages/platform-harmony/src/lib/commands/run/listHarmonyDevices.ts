@@ -7,7 +7,7 @@ export type DeviceData = {
   type: 'emulator' | 'phone';
 };
 
-export async function listAndroidDevices() {
+export async function listHarmonyDevices() {
   const devices = await getDevices();
 
   const allDevices: Array<DeviceData> = [];
@@ -18,7 +18,7 @@ export async function listAndroidDevices() {
       // @todo get readable name
       readableName: device.name,
       type: 'phone',
-      connected: true,
+      connected: device.state === 'Connected',
     };
     allDevices.push(phoneData);
   }
