@@ -1,0 +1,6 @@
+{
+  "name": "rock-provider-github-template",
+  "devDependencies": {
+    "@rock-js/provider-github": "^0.11.2"
+  }
+}

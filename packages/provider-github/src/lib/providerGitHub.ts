@@ -11,10 +11,16 @@ export class GitHubBuildCache implements RemoteBuildCache {
 
   constructor(config?: { owner: string; repository: string; token: string }) {
     if (config) {
+      const token = config.token || process.env['GITHUB_TOKEN'];
+      if (!token) {
+        throw new Error(
+          'GitHub Personal Access Token is required to fetch remote cache. Configure `GITHUB_TOKEN` variable in .env file or pass it as a `token` argument.',
+        );
+      }
       this.repoDetails = {
         owner: config.owner,
         repository: config.repository,
-        token: config.token,
+        token,
       };
     }
   }

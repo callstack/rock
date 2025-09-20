@@ -178,16 +178,33 @@ You can configure it as follows:
 
 ```ts title="rock.config.mjs"
 import { providerGitHub } from '@rock-js/provider-github';
+import { config } from 'dotenv';
+config(); // load .env file containing GITHUB_TOKEN
 
 export default {
-  // ...
+  // ...rest of the config
   remoteCacheProvider: providerGitHub({
     owner: 'github_org',
     repository: 'github_repo_name',
-    token: 'personal_access_token',
   }),
 };
 ```
+
+GitHub provider requires a valid GitHub Personal Access Token to fetch remote cache. Typically, you'll use `.env` file to store your GitHub Personal Access Token as `GITHUB_TOKEN`, next to other project secrets securely, not exposing it to the public.
+
+```text title=".env"
+GITHUB_TOKEN=token_value
+```
+
+In case you use a different env variable, you can pass it as a `token` argument to the `providerGitHub` function.
+
+#### GitHub Provider Options
+
+| Option  | Type     | Required | Description                                                        |
+| ------- | -------- | -------- | ------------------------------------------------------------------ |
+| `repo`  | `string` | Yes      | The repository name to use for the GitHub server                   |
+| `owner` | `string` | Yes      | The bucket name to use for the S3 server                           |
+| `token` | `string` | No       | Optional GitHub Personal Access Token to use for the GitHub server |
 
 ### AWS S3 provider
 
@@ -195,39 +212,26 @@ If you prefer to store native build artifacts on AWS S3 or Cloudflare R2, you ca
 
 ```ts title="rock.config.mjs"
 import { providerS3 } from '@rock-js/provider-s3';
+import { config } from 'dotenv';
+config(); // load .env file containing AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
 
 export default {
-  // ...
+  // ...rest of the config
   remoteCacheProvider: providerS3({
     bucket: 'your-bucket',
     region: 'your-region',
-    accessKeyId: 'access-key',
-    secretAccessKey: 'secret-key',
   }),
 };
 ```
 
-Or when using env variables (since AWS S3 supports reading these when available in `process.env`):
+S3 provider requires a valid AWS Access Key ID and Secret Access Key to fetch remote cache. Typically, you'll use `.env` file to store your AWS Access Key ID and Secret Access Key as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, next to other project secrets securely, not exposing it to the public.
 
 ```text title=".env"
 AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 ```
 
-```ts title="rock.config.mjs"
-import { providerS3 } from '@rock-js/provider-s3';
-import { config } from 'dotenv';
-
-config(); // load .env
-
-export default {
-  // ...
-  remoteCacheProvider: providerS3({
-    bucket: 'your-bucket',
-    region: 'your-region',
-  }),
-};
-```
+In case you use a different env variable, you can pass it as a `accessKeyId` and `secretAccessKey` arguments to the `providerS3` function.
 
 #### S3 Provider Options
 

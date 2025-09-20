@@ -1,5 +1,8 @@
 import * as path from 'node:path';
-import { resolveAbsolutePath } from '@rock-js/tools';
+import {
+  resolveAbsolutePath,
+  type SupportedRemoteCacheProviders,
+} from '@rock-js/tools';
 
 export type TemplateInfo = NpmTemplateInfo | LocalTemplateInfo;
 
@@ -92,6 +95,58 @@ export const PLATFORMS: TemplateInfo[] = [
     importName: 'platformAndroid',
   },
 ];
+
+export function remoteCacheProviderToImportTemplate(
+  provider: SupportedRemoteCacheProviders,
+) {
+  switch (provider) {
+    case 'github-actions':
+      return `import { providerGitHub } from '@rock-js/provider-github';`;
+    case 's3':
+      return `import { providerS3 } from '@rock-js/provider-s3';`;
+  }
+}
+
+export function remoteCacheProviderToConfigTemplate(
+  provider: SupportedRemoteCacheProviders,
+  args: Record<string, string>,
+) {
+  switch (provider) {
+    case 'github-actions':
+      return template([
+        'remoteCacheProvider: providerGitHub({',
+        `  owner: '${args['owner']}',`,
+        `  repository: '${args['repository']}',`,
+        '}),',
+      ]);
+    case 's3':
+      return template([
+        'remoteCacheProvider: providerS3({',
+        `  bucket: '${args['bucket']}',`,
+        `  region: '${args['region']}',`,
+        [`  endpoint: '${args['endpoint']}',`, Boolean(args['endpoint'])],
+        '}),',
+      ]);
+  }
+}
+
+export function template(lines: Array<string | [string, boolean]>) {
+  return lines
+    .filter((line) => {
+      // If it's a [content, condition] pair, check the condition
+      if (Array.isArray(line)) {
+        return Boolean(line[1]);
+      }
+      // If it's just a string, always include it
+      return true;
+    })
+    .map((line) => {
+      // Extract content from [content, condition] pair or use string directly
+      const content = Array.isArray(line) ? line[0] : line;
+      return content;
+    })
+    .join('\n  ');
+}
 
 export function resolveTemplate(
   templates: TemplateInfo[],

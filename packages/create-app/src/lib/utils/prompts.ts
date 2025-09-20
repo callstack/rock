@@ -5,6 +5,7 @@ import {
   note,
   outro,
   promptConfirm,
+  promptGroup,
   promptMultiselect,
   promptSelect,
   promptText,
@@ -23,9 +24,9 @@ export function printHelpMessage(
 ) {
   console.log(`
      Usage: create-rock [options]
-  
+
      Options:
-     
+
        -h, --help                 Display help for command
        -v, --version              Output the version number
        -d, --dir                  Create project in specified directory
@@ -36,7 +37,7 @@ export function printHelpMessage(
        --remote-cache-provider    Specify remote cache provider
        --override                 Override files in target directory
        --install                  Install Node.js dependencies
-     
+
      Available templates:
        ${templates.map((t) => t.name).join(', ')}
 
@@ -159,19 +160,71 @@ export function promptBundlers(
   });
 }
 
-export function promptRemoteCacheProvider(): Promise<SupportedRemoteCacheProviders | null> {
-  return promptSelect({
-    message: 'Which remote cache provider do you want to use?',
+export function promptRemoteCacheProvider() {
+  return promptSelect<SupportedRemoteCacheProviders | null>({
+    message: 'What do you want to use as cache for your remote builds?',
     initialValue: 'github-actions',
     options: [
       {
         value: 'github-actions',
         label: 'GitHub Actions',
-        hint: 'Enable builds on your CI',
+        hint: 'The easiest way to start if you store your code on GitHub',
       },
-      { value: null, label: 'None', hint: 'Local builds only' },
+      {
+        value: 's3',
+        label: 'S3',
+        hint: 'Work with any S3-compatible storage, including AWS S3 and Cloudflare R2',
+      },
+      {
+        value: null,
+        label: 'None',
+        hint: `Local cache only which isn't shared across team members or CI/CD environments`,
+      },
     ],
-  }) as Promise<SupportedRemoteCacheProviders | null>;
+  });
+}
+
+export function promptRemoteCacheProviderArgs(
+  provider: SupportedRemoteCacheProviders,
+) {
+  const environmentVariablesTitle = 'Set the below environment variables';
+
+  switch (provider) {
+    case 'github-actions':
+      note(
+        [`GITHUB_TOKEN      Your GitHub personal access token (PAT)`].join('\n'),
+        environmentVariablesTitle,
+      );
+
+      return promptGroup({
+        owner: () => promptText({ message: 'GitHub repository owner' }),
+        repository: () => promptText({ message: 'GitHub repository name' }),
+      });
+    case 's3':
+      note(
+        [
+          `AWS_ACCESS_KEY_ID          Your AWS access key ID`,
+          `AWS_SECRET_ACCESS_KEY      Your AWS secret access key`,
+        ].join('\n'),
+        environmentVariablesTitle,
+      );
+
+      return promptGroup({
+        bucket: () =>
+          promptText({ message: 'Bucket name', placeholder: 'bucket-name' }),
+        region: () =>
+          promptText({
+            message: 'Region',
+            placeholder: 'us-west-1',
+          }),
+        endpoint: () =>
+          promptText({
+            message:
+              'Endpoint (Only necessary for self-hosted S3 or Cloudflare R2)',
+            placeholder: 'https://<ACCOUNT_ID>.r2.cloudflarestorage.com',
+          }),
+      });
+  }
 }
 
 export function confirmOverrideFiles(targetDir: string) {

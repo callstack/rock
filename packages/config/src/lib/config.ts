@@ -172,6 +172,13 @@ export async function getConfig(
     getRemoteCacheProvider: async () => {
       // special case for github-actions
       if (validatedConfig.remoteCacheProvider === 'github-actions') {
+        logger.warnOnce('github-actions')(
+          `Using shorthand "github-actions" as "remoteCacheProvider" value in ${colorLink(
+            'rock.config.mjs',
+          )} is deprecated. It will be removed in future releases. 
+Please use "@rock-js/provider-github" plugin explicitly instead.
+Read more: ${colorLink('https://rockjs.dev/docs/configuration#github-actions-provider')}`,
+        );
         const { providerGitHub } = await import('@rock-js/provider-github');
         return providerGitHub();
       }

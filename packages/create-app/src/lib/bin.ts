@@ -16,6 +16,8 @@ import {
   BUNDLERS,
   PLATFORMS,
   PLUGINS,
+  remoteCacheProviderToConfigTemplate,
+  remoteCacheProviderToImportTemplate,
   resolveTemplate,
   TEMPLATES,
 } from './templates.js';
@@ -46,6 +48,7 @@ import {
   promptPlugins,
   promptProjectName,
   promptRemoteCacheProvider,
+  promptRemoteCacheProviderArgs,
   promptTemplate,
 } from './utils/prompts.js';
 import {
@@ -146,6 +149,10 @@ export async function run() {
       ? null
       : await promptRemoteCacheProvider();
 
+  const remoteCacheProviderArgs = remoteCacheProvider
+    ? await promptRemoteCacheProviderArgs(remoteCacheProvider)
+    : null;
+
   const shouldInstallDependencies =
     options.install || isInteractive()
       ? await promptInstallDependencies()
@@ -172,7 +179,12 @@ export async function run() {
     platforms,
     plugins,
     bundler,
-    remoteCacheProvider,
+    remoteCacheProvider && remoteCacheProviderArgs
+      ? {
+          name: remoteCacheProvider,
+          args: remoteCacheProviderArgs,
+        }
+      : null,
   );
   loader.stop('Applied template, platforms and plugins.');
 
@@ -296,7 +308,10 @@ function createConfig(
   platforms: TemplateInfo[],
   plugins: TemplateInfo[] | null,
   bundler: TemplateInfo,
-  remoteCacheProvider: SupportedRemoteCacheProviders | null,
+  remoteCacheProvider: {
+    name: SupportedRemoteCacheProviders;
+    args: Record<string, string>;
+  } | null,
 ) {
   const rockConfig = path.join(absoluteTargetDir, 'rock.config.mjs');
   fs.writeFileSync(
@@ -309,7 +324,10 @@ export function formatConfig(
   platforms: TemplateInfo[],
   plugins: TemplateInfo[] | null,
   bundler: TemplateInfo,
-  remoteCacheProvider: SupportedRemoteCacheProviders | null,
+  remoteCacheProvider: {
+    name: SupportedRemoteCacheProviders;
+    args: Record<string, string>;
+  } | null,
 ) {
   const platformsWithImports = platforms.filter(
     (template) => template.importName,
@@ -317,32 +335,43 @@ export function formatConfig(
   const pluginsWithImports = plugins
     ? plugins.filter((template) => template.importName)
     : null;
-  return `${[...platformsWithImports, ...(pluginsWithImports ?? []), bundler]
-    .map(
+
+  return `${[
+    ...[...platformsWithImports, ...(pluginsWithImports ?? []), bundler].map(
       (template) =>
         `import { ${template.importName} } from '${template.packageName}';`,
-    )
+    ),
+    remoteCacheProvider?.name
+      ? remoteCacheProviderToImportTemplate(remoteCacheProvider.name)
+      : '',
+  ]
+    .filter(Boolean)
     .join('\n')}
 
-export default {${
+export default {
+  ${[
     pluginsWithImports && pluginsWithImports.length > 0
-      ? `
-  plugins: [
+      ? `plugins: [
     ${pluginsWithImports
       .map((template) => `${template.importName}(),`)
       .join('\n    ')}
   ],`
-      : ''
-  }
-  bundler: ${bundler.importName}(),
-  platforms: {
+      : '',
+    `bundler: ${bundler.importName}(),`,
+    `platforms: {
     ${platformsWithImports
       .map((template) => `${template.name}: ${template.importName}(),`)
       .join('\n    ')}
-  },
-  remoteCacheProvider: ${
-    remoteCacheProvider === null ? null : `'${remoteCacheProvider}'`
-  },
+  },`,
+    remoteCacheProvider?.name
+      ? remoteCacheProviderToConfigTemplate(
+          remoteCacheProvider.name,
+          remoteCacheProvider.args,
+        )
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n  ')}
 };
 `;
 }

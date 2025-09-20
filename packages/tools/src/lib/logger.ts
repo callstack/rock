@@ -1,6 +1,7 @@
 import util from 'node:util';
 import { log as clackLog } from '@clack/prompts';
 import isUnicodeSupported from 'is-unicode-supported';
+import cacheManager from './cacheManager.js';
 import { color } from './color.js';
 import { isInteractive } from './isInteractive.js';
 
@@ -27,6 +28,16 @@ const warn = (...messages: Array<unknown>) => {
   const output = util.format(...messages);
   clackLog.warn(mapLines(output, color.yellow));
 };
+
+const warnOnce =
+  (key: string) =>
+  (...messages: Array<unknown>) => {
+    if (cacheManager.get(`warnOnce-${key}`)) {
+      return;
+    }
+    warn(...messages);
+    cacheManager.set(`warnOnce-${key}`, 'true');
+  };
 
 const error = (...messages: Array<unknown>) => {
   const output = util.format(...messages);
@@ -60,6 +71,7 @@ export default {
   success,
   info,
   warn,
+  warnOnce,
   error,
   debug,
   log,

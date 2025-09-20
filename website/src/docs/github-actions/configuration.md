@@ -55,15 +55,13 @@ Here, we'll use the `dotenv` package to load the `.env` file:
 import { providerGitHub } from '@rock-js/provider-github';
 import { config } from 'dotenv';
 
-config(); // load .env file
+config(); // load .env file containing GITHUB_TOKEN
 
 export default {
-  // rest of the config
-  // ...
+  // ...rest of the config
   remoteCacheProvider: providerGitHub({
     owner: 'github_org',
     repository: 'github_repo_name',
-    token: process.env.GITHUB_TOKEN,
   }),
 };
 ```
