@@ -37,9 +37,9 @@ async function runOhpm(sourceDir: string, loader: ReturnType<typeof spinner>) {
       cwd: sourceDir,
     });
   } catch (error) {
-    loader.stop('Failed to install dependencies with ohpm');
-    throw new RockError('Failed to install native dependencies with ohpm.', {
-      cause: error,
+    loader.stop('Failed to install dependencies with ohpm', 1);
+    throw new RockError('Failed to install native dependencies with ohpm', {
+      cause: (error as SubprocessError).output,
     });
   }
 }
@@ -89,26 +89,15 @@ Build Mode    ${color.bold(args.buildMode)}`);
     );
     loader.stop(`Built the app`);
   } catch (error) {
-    loader.stop('Failed to build the app');
+    loader.stop('Failed to build the app', 1);
 
-    const hints = getErrorHints((error as SubprocessError).stdout ?? '');
-    throw new RockError(
-      hints ||
-        'Failed to build the app. See the error above for details from Hvigor.',
-    );
+    throw new RockError('Failed to build the app with Hvigor', {
+      cause: (error as SubprocessError).output,
+    });
   }
 
   const outputFilePath = await findOutputFile(sourceDir, args.module, device);
   if (outputFilePath) {
     saveLocalBuildCache(artifactName, outputFilePath);
   }
-}
-
-function getErrorHints(output: string) {
-  const signingMessage = output.includes('validateSigningRelease FAILED')
-    ? `Hint: You can run "${color.bold(
-        'rock create-keystore:harmony',
-      )}" to create a keystore file.`
-    : '';
-  return signingMessage;
 }

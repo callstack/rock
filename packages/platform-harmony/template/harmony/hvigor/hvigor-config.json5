@@ -1,7 +1,7 @@
 {
   modelVersion: '5.0.0',
   dependencies: {
-    // "@rnoh/hvigor-plugin": "../../node_modules/<RNOH_CLI>/harmony/rnoh-hvigor-plugin-X.X.X.tgz",
+    "@rnoh/hvigor-plugin": "0.77.18-1"
   },
   execution: {
     // "analyze": "default",                    /* Define the build analyze mode. Value: [ "default" | "verbose" | false ]. Default: "default" */

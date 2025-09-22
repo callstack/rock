@@ -1,0 +1,11 @@
+{
+    "name": "rock-platform-harmony-template",
+    "scripts": {
+      "harmony": "rock run:harmony"
+    },
+    "devDependencies": {
+      "@rock-js/platform-harmony": "^0.11.2",
+      "@react-native-oh/react-native-harmony": "0.77.18-1"
+    }
+  }
+  
