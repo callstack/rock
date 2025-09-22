@@ -39,6 +39,7 @@ const CLEANUP_TASK_NAMES = [
   'bun',
   'pnpm',
   'rock',
+  'harmony',
 ] as const;
 
 /**

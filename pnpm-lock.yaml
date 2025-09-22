@@ -221,7 +221,7 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/tools':
-        specifier: ^0.11.1
+        specifier: ^0.11.2
         version: link:../tools
       adm-zip:
         specifier: ^0.5.16
@@ -237,7 +237,7 @@ importers:
         specifier: ^20.0.0
         version: 20.0.1
       '@rock-js/config':
-        specifier: ^0.11.1
+        specifier: ^0.11.2
         version: link:../config
       '@types/adm-zip':
         specifier: ^0.5.7

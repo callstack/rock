@@ -17,14 +17,11 @@ export const platformHarmony =
       description: 'Rock plugin for HarmonyOS Next.',
       autolinkingConfig: {
         get project() {
-          const androidConfig = getValidProjectConfig(
+          const harmonyConfig = getValidProjectConfig(
             api.getProjectRoot(),
             pluginConfig,
           );
-          return {
-            ...androidConfig,
-            sourceDir: '../../SampleApp',
-          };
+          return harmonyConfig;
         },
       },
     };

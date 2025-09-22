@@ -46,7 +46,7 @@ export async function runHarmony(
   remoteCacheProvider: null | (() => RemoteBuildCache) | undefined,
   fingerprintOptions: FingerprintSources,
 ) {
-  intro('Running Android app');
+  intro('Running HarmonyOS Next app');
 
   normalizeArgs(args, projectRoot);
   const { sourceDir, bundleName } = harmonyConfig;

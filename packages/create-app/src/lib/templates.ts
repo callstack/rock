@@ -94,6 +94,14 @@ export const PLATFORMS: TemplateInfo[] = [
     directory: 'template',
     importName: 'platformAndroid',
   },
+  {
+    type: 'npm',
+    name: 'harmony',
+    packageName: '@rock-js/platform-harmony',
+    version: 'latest',
+    directory: 'template',
+    importName: 'platformHarmony',
+  },
 ];
 
 export function remoteCacheProviderToImportTemplate(
