@@ -18,6 +18,7 @@ export function getValidProjectConfig(
       `Harmony project not found under ${path.join(projectRoot, sourceDir)}.`,
     );
   }
+
   let bundleName: string;
   try {
     bundleName = json5.parse(
@@ -32,8 +33,24 @@ export function getValidProjectConfig(
     });
   }
 
+  let signingConfigs: string | undefined;
+  try {
+    const buildProfile = json5.parse(
+      fs.readFileSync(
+        path.join(projectRoot, sourceDir, 'build-profile.json5'),
+        'utf8',
+      ),
+    );
+    signingConfigs = buildProfile.app.signingConfigs;
+  } catch (error) {
+    throw new RockError('Error reading build-profile.json5 file.', {
+      cause: error,
+    });
+  }
+
   return {
     sourceDir,
     bundleName,
+    signingConfigs,
   };
 }

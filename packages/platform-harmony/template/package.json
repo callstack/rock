@@ -1,10 +1,16 @@
 {
   "name": "rock-platform-harmony-template",
   "scripts": {
-    "harmony": "rock run:harmony"
+    "harmony": "rock run:harmony",
+    "bundle:harmony": "rock bundle --platform harmony --dev false --entry-file ./index.js --bundle-output ./harmony/entry/src/main/resources/rawfile/hermes_bundle --hermes && mv ./harmony/entry/src/main/resources/rawfile/hermes_bundle ./harmony/entry/src/main/resources/rawfile/hermes_bundle.hbc"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-native": "^0.77.1"
   },
   "devDependencies": {
     "@rock-js/platform-harmony": "^0.11.2",
-    "@react-native-oh/react-native-harmony": "0.77.18-1"
+    "@react-native-oh/react-native-harmony": "0.77.18-1",
+    "@react-native-oh/react-native-harmony-cli": "0.77.18-1"
   }
 }

@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import type { DeviceData } from './listHarmonyDevices.js';
 
@@ -19,5 +20,5 @@ export async function findOutputFile(
     'default',
     hapName,
   );
-  return pathToHap;
+  return fs.existsSync(pathToHap) ? pathToHap : undefined;
 }

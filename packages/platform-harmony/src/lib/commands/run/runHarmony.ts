@@ -80,7 +80,6 @@ export async function runHarmony(
     }
   } else {
     // @todo consider filtering out offline devices
-    console.log(await getDevices());
     if ((await getDevices()).length === 0) {
       if (isInteractive()) {
         await selectAndLaunchDevice();
