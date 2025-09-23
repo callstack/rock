@@ -82,10 +82,14 @@ export async function nativeFingerprintCommand(
 function validateOptions(options: NativeFingerprintCommandOptions) {
   if (!options.platform) {
     throw new RockError(
-      'The --platform flag is required. Please specify either "ios" or "android".',
+      'The --platform flag is required. Please specify either "ios", "android" or "harmony".',
     );
   }
-  if (options.platform !== 'ios' && options.platform !== 'android') {
+  if (
+    options.platform !== 'ios' &&
+    options.platform !== 'android' &&
+    options.platform !== 'harmony'
+  ) {
     throw new RockError(
       `Unsupported platform "${options.platform}". Please specify either "ios" or "android".`,
     );

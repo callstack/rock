@@ -40,6 +40,21 @@ function getIOSIgnorePaths(sourceDir: string) {
   ];
 }
 
+function getHarmonyIgnorePaths(sourceDir: string) {
+  return [
+    `${sourceDir}/.hvigor`,
+    `${sourceDir}/**/.idea`,
+    `${sourceDir}/**/oh_modules`,
+    `${sourceDir}/**/build`,
+    `${sourceDir}/**/.cxx`,
+    `${sourceDir}/**/.preview`,
+    `${sourceDir}/**/.clangd`,
+    `${sourceDir}/**/.clang-format`,
+    `${sourceDir}/**/.clang-tidy`,
+    `${sourceDir}/**/test`,
+  ];
+}
+
 export function getDefaultIgnorePaths() {
   return ['**/.DS_Store'];
 }
@@ -49,6 +64,8 @@ export function getPlatformDirIgnorePaths(platform: string, sourceDir: string) {
     return getAndroidIgnorePaths(sourceDir);
   } else if (platform === 'ios') {
     return getIOSIgnorePaths(sourceDir);
+  } else if (platform === 'harmony') {
+    return getHarmonyIgnorePaths(sourceDir);
   }
   return [];
 }

@@ -1,10 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import type { Config } from '@react-native-community/cli-types';
 import type { FingerprintSources, RemoteBuildCache } from '@rock-js/tools';
 import {
   color,
-  // formatArtifactName,
+  formatArtifactName,
   intro,
   isInteractive,
   logger,
@@ -31,10 +30,8 @@ export interface Flags extends BuildFlags {
   binaryPath?: string;
 }
 
-export type AndroidProject = NonNullable<Config['project']['android']>;
-
 /**
- * Starts the app on a connected Android emulator or device.
+ * Starts the app on a connected HarmonyOS emulator or device.
  */
 export async function runHarmony(
   harmonyConfig: {
@@ -53,16 +50,12 @@ export async function runHarmony(
   const devices = await listHarmonyDevices();
   const device = await selectDevice(devices, args);
 
-  // const artifactName = await formatArtifactName({
-  //   // @ts-expect-error udpate type
-  //   platform: 'harmony',
-  //   traits: [args.buildMode],
-  //   root: projectRoot,
-  //   fingerprintOptions,
-  // });
-  // @todo fix this
-  const artifactName =
-    'rock-harmony-debug-d73f224c4af1eb225df06c03714e0295e24b55b3';
+  const artifactName = await formatArtifactName({
+    platform: 'harmony',
+    traits: [args.buildMode],
+    root: projectRoot,
+    fingerprintOptions,
+  });
   const binaryPath = await getBinaryPath({
     platformName: 'harmony',
     artifactName,
@@ -87,6 +80,7 @@ export async function runHarmony(
     }
   } else {
     // @todo consider filtering out offline devices
+    console.log(await getDevices());
     if ((await getDevices()).length === 0) {
       if (isInteractive()) {
         await selectAndLaunchDevice();
@@ -117,6 +111,8 @@ export async function runHarmony(
 async function selectAndLaunchDevice() {
   const allDevices = await listHarmonyDevices();
   const device = await promptForDeviceSelection(allDevices);
+
+  console.log('sd', device);
 
   if (!device.connected) {
     // await tryLaunchEmulator(device.readableName);

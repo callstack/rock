@@ -15,7 +15,7 @@ export type FingerprintSources = {
 };
 
 export type FingerprintOptions = {
-  platform: 'ios' | 'android';
+  platform: 'ios' | 'android' | 'harmony';
   extraSources: string[];
   ignorePaths: string[];
   env: string[];

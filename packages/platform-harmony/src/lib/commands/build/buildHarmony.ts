@@ -2,7 +2,7 @@ import type { RemoteBuildCache } from '@rock-js/tools';
 import {
   colorLink,
   type FingerprintSources,
-  // formatArtifactName,
+  formatArtifactName,
   getBinaryPath,
   logger,
   outro,
@@ -33,15 +33,12 @@ export async function buildHarmony(
 ) {
   normalizeArgs(args);
   const { sourceDir, bundleName } = harmonyConfig;
-  // const artifactName = await formatArtifactName({
-  //   platform: 'android',
-  //   traits: [args.buildMode],
-  //   root: projectRoot,
-  //   fingerprintOptions,
-  // });
-  // @todo fix this
-  const artifactName =
-    'rock-harmony-debug-d73f224c4af1eb225df06c03714e0295e24b55b3';
+  const artifactName = await formatArtifactName({
+    platform: 'harmony',
+    traits: [args.buildMode],
+    root: projectRoot,
+    fingerprintOptions,
+  });
   const binaryPath = await getBinaryPath({
     platformName: 'harmony',
     artifactName,

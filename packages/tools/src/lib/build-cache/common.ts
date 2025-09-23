@@ -108,7 +108,7 @@ export async function formatArtifactName({
   raw,
   type,
 }: {
-  platform?: 'ios' | 'android';
+  platform?: 'ios' | 'android' | 'harmony';
   traits?: string[];
   root: string;
   fingerprintOptions: FingerprintSources;
