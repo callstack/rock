@@ -29,7 +29,7 @@ export function copyDirSync(
     } else {
       if (nodePath.basename(srcFile) === 'package.json') {
         mergePackageJsons(srcFile, distFile);
-      } else {
+      } else if (!skipFiles?.includes(nodePath.basename(srcFile))) {
         fs.copyFileSync(srcFile, distFile);
       }
     }

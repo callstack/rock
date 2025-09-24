@@ -165,7 +165,13 @@ export async function run() {
   for (const platform of platforms) {
     await extractPackage(absoluteTargetDir, platform);
   }
-  await extractPackage(absoluteTargetDir, bundler);
+  // Skip metro.config.js for Harmony platform as it's included in the platform template
+  const skipFiles = platforms
+    .map((platform) => platform.name)
+    .includes('harmony')
+    ? ['metro.config.js']
+    : undefined;
+  await extractPackage(absoluteTargetDir, bundler, skipFiles);
   for (const plugin of plugins ?? []) {
     await extractPackage(absoluteTargetDir, plugin);
   }
@@ -252,7 +258,11 @@ async function installDependencies(
   loader.stop(`Installed dependencies with ${pkgManager}`);
 }
 
-async function extractPackage(absoluteTargetDir: string, pkg: TemplateInfo) {
+async function extractPackage(
+  absoluteTargetDir: string,
+  pkg: TemplateInfo,
+  skipFiles?: string[],
+) {
   let tarballPath: string | null = null;
   // NPM package: download tarball file
   if (pkg.type === 'npm') {
@@ -282,7 +292,9 @@ async function extractPackage(absoluteTargetDir: string, pkg: TemplateInfo) {
       fs.unlinkSync(tarballPath);
     }
 
-    copyDirSync(path.join(localPath, pkg.directory ?? ''), absoluteTargetDir);
+    copyDirSync(path.join(localPath, pkg.directory ?? ''), absoluteTargetDir, {
+      skipFiles,
+    });
     removeDirSync(localPath);
 
     return;
@@ -292,6 +304,7 @@ async function extractPackage(absoluteTargetDir: string, pkg: TemplateInfo) {
     copyDirSync(
       path.join(pkg.localPath, pkg.directory ?? ''),
       absoluteTargetDir,
+      { skipFiles },
     );
 
     return;
