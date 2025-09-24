@@ -12,11 +12,18 @@ const PLACEHOLDER_NAME = 'HelloWorld';
  */
 export function renameCommonFiles(projectPath: string) {
   const sourceGitIgnorePath = path.join(projectPath, 'gitignore');
-  if (!fs.existsSync(sourceGitIgnorePath)) {
-    return;
+  if (fs.existsSync(sourceGitIgnorePath)) {
+    fs.renameSync(sourceGitIgnorePath, path.join(projectPath, '.gitignore'));
   }
 
-  fs.renameSync(sourceGitIgnorePath, path.join(projectPath, '.gitignore'));
+  // Harmony platform has a separate gitignore file.
+  const harmonyGitIgnorePath = path.join(projectPath, 'harmony', 'gitignore');
+  if (fs.existsSync(harmonyGitIgnorePath)) {
+    fs.renameSync(
+      harmonyGitIgnorePath,
+      path.join(projectPath, 'harmony', '.gitignore'),
+    );
+  }
 }
 
 /**

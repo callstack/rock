@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { RockError } from '@rock-js/tools';
+import { logger, RockError } from '@rock-js/tools';
 import json5 from 'json5';
 
 export type HarmonyProjectConfig = {
@@ -43,8 +43,8 @@ export function getValidProjectConfig(
     );
     signingConfigs = buildProfile.app.signingConfigs;
   } catch (error) {
-    throw new RockError('Error reading build-profile.json5 file.', {
-      cause: error,
+    logger.debug('Error reading build-profile.json5 file.', {
+      cause: (error as Error).message,
     });
   }
 
