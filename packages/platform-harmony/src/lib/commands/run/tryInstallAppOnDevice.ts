@@ -1,5 +1,7 @@
+import path from 'node:path';
 import {
   color,
+  colorLink,
   logger,
   RockError,
   spawn,
@@ -27,10 +29,21 @@ export async function tryInstallAppOnDevice(
   if (!binaryPath) {
     const outputFilePath = await findOutputFile(sourceDir, args.module, device);
     if (!outputFilePath) {
-      logger.warn(
-        "Skipping installation because there's no build output file.",
-      );
-      return;
+      if (device.type === 'phone') {
+        throw new RockError(
+          `There was no signed build output file for the physical device. 
+This usually means you're missing signing config in your ${colorLink(
+            path.join(sourceDir, 'build-profile.json5'),
+          )} file. 
+Please open DevEco Studio, proceed to: ${color.bold('File > Project Structure... > Signing Configs')}
+and log in to your Huawei account to fill the signing information.`,
+        );
+      } else {
+        logger.warn(
+          "Skipping installation because there's no build output file.",
+        );
+        return;
+      }
     }
     pathToHap = outputFilePath;
   } else {

@@ -7,9 +7,11 @@ export async function findOutputFile(
   module: string,
   device?: DeviceData,
 ) {
-  let hapName = `${module}-default-signed.hap`;
+  let hapName: string;
   if (device?.type === 'emulator') {
     hapName = `${module}-default-unsigned.hap`;
+  } else {
+    hapName = `${module}-default-signed.hap`;
   }
   const pathToHap = path.join(
     sourceDir,

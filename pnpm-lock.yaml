@@ -217,15 +217,9 @@ importers:
 
   packages/platform-harmony:
     dependencies:
-      '@react-native-community/cli-config-android':
-        specifier: ^20.0.0
-        version: 20.0.1
       '@rock-js/tools':
         specifier: ^0.11.2
         version: link:../tools
-      adm-zip:
-        specifier: ^0.5.16
-        version: 0.5.16
       json5:
         specifier: ^2.2.3
         version: 2.2.3
@@ -239,9 +233,6 @@ importers:
       '@rock-js/config':
         specifier: ^0.11.2
         version: link:../config
-      '@types/adm-zip':
-        specifier: ^0.5.7
-        version: 0.5.7
 
   packages/platform-ios:
     dependencies:
@@ -425,8 +416,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.3
       fs-fingerprint:
-        specifier: ^0.7.0
-        version: 0.7.0
+        specifier: ^0.11.0
+        version: 0.11.0
       is-unicode-supported:
         specifier: ^2.1.0
         version: 2.1.0
@@ -3807,8 +3798,8 @@ packages:
     resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}
     engines: {node: '>=6 <7 || >=8'}
 
-  fs-fingerprint@0.7.0:
-    resolution: {integrity: sha512-bEfz/cgk+gU9m9HvgV4oySvUrxgR91/UHNKvSY9rfXy64P4cq6SzS1LibaPySyqaygrdKGHxPn0AvUaTjWZkaA==}
+  fs-fingerprint@0.11.0:
+    resolution: {integrity: sha512-EpEtmn1T9bLxxf+506gVdpehs6pAIFAM6UCDtT9/J7tfLXg8FPn+3jmuVnMjjRFshJohR2lb2TZGwuZAhIOcKg==}
     engines: {node: '>=20.0.0'}
 
   fs.realpath@1.0.0:
@@ -11032,11 +11023,10 @@ snapshots:
       jsonfile: 4.0.0
       universalify: 0.1.2
 
-  fs-fingerprint@0.7.0:
+  fs-fingerprint@0.11.0:
     dependencies:
-      ignore: 7.0.5
       p-limit: 7.1.1
-      picomatch: 4.0.3
+      tinyglobby: 0.2.15
 
   fs.realpath@1.0.0: {}
 
@@ -14123,7 +14113,7 @@ snapshots:
       picomatch: 4.0.3
       postcss: 8.5.6
       rollup: 4.46.2
-      tinyglobby: 0.2.14
+      tinyglobby: 0.2.15
     optionalDependencies:
       '@types/node': 20.19.17
       fsevents: 2.3.3

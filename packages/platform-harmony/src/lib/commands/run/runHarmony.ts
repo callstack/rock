@@ -67,10 +67,6 @@ export async function runHarmony(
   });
 
   if (device) {
-    // if (!(await getDevices()).find((d) => d.name === device.deviceId)) {
-    //   // deviceId is undefined until it's launched, hence overwriting it here
-    //   device.deviceId = await tryLaunchEmulator(device.readableName);
-    // }
     if (device.deviceId) {
       if (!binaryPath) {
         // @todo fix sourceDir
@@ -84,16 +80,15 @@ export async function runHarmony(
       if (isInteractive()) {
         await selectAndLaunchDevice();
       } else {
-        logger.debug(
+        logger.warn(
           'No booted devices or emulators found. Launching first available emulator.',
         );
-        // @todo add simulators
+        // @todo add emulators
         // await tryLaunchEmulator();
       }
     }
 
     if (!binaryPath) {
-      // @todo revisit
       await runHvigor({ sourceDir, args, artifactName, bundleName });
     }
 
@@ -114,6 +109,7 @@ async function selectAndLaunchDevice() {
   console.log('sd', device);
 
   if (!device.connected) {
+    // @todo add emulators
     // await tryLaunchEmulator(device.readableName);
     // list devices once again when emulator is booted
     const allDevices = await listHarmonyDevices();

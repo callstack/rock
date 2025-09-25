@@ -2,7 +2,7 @@ import { getDevices } from './hdc.js';
 
 export type DeviceData = {
   deviceId: string | undefined;
-  readableName: string;
+  readableName: string | undefined;
   connected: boolean;
   type: 'emulator' | 'phone';
 };

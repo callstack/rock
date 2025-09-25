@@ -3,10 +3,7 @@ import path from 'node:path';
 import { calculateFingerprint, type FingerprintResult } from 'fs-fingerprint';
 import { getReactNativeVersion, logger } from '../../index.js';
 import { spawn } from '../spawn.js';
-import {
-  getDefaultIgnorePaths,
-  getPlatformDirIgnorePaths,
-} from './ignorePaths.js';
+import { getAllIgnorePaths } from './ignorePaths.js';
 
 export type FingerprintSources = {
   extraSources: string[];
@@ -46,25 +43,15 @@ export async function nativeFingerprint(
   const packageJSONPath = path.join(projectRoot, 'package.json');
   const packageJSON = await readPackageJSON(packageJSONPath);
   const scripts = packageJSON['scripts'];
+  const { sourceDir } = autolinkingConfig.project[options.platform];
 
-  const platforms = Object.keys(autolinkingConfig.project).map((key) => {
-    return {
-      platform: key,
-      sourceDir: path.relative(
-        projectRoot,
-        autolinkingConfig.project[key].sourceDir,
-      ),
-    };
-  });
-
-  if (platforms.length === 0) {
+  if (!options.platform || !sourceDir) {
     throw new Error('No platforms found in autolinking project config');
   }
 
   const fingerprint = await calculateFingerprint(projectRoot, {
-    ignoreFilePath: '.gitignore',
     include: [
-      ...platforms.map((platform) => platform.sourceDir),
+      sourceDir,
       ...options.extraSources.map((source) =>
         path.isAbsolute(source) ? path.relative(projectRoot, source) : source,
       ),
@@ -82,10 +69,7 @@ export async function nativeFingerprint(
       ...(options.env.length > 0 ? [{ key: 'env', json: options.env }] : []),
     ],
     exclude: [
-      ...getDefaultIgnorePaths(),
-      ...platforms.flatMap(({ platform, sourceDir }) =>
-        getPlatformDirIgnorePaths(platform, sourceDir),
-      ),
+      ...getAllIgnorePaths(options.platform, sourceDir, projectRoot),
       ...(options.ignorePaths ?? []),
     ],
   });

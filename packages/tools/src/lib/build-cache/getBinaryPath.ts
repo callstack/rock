@@ -84,8 +84,11 @@ async function warnIgnoredFiles(
   const projectRoot = getProjectRoot();
   const ignorePaths = [
     ...(fingerprintOptions?.ignorePaths ?? []),
-    // git expects relative paths
-    ...getAllIgnorePaths(platformName, path.relative(projectRoot, sourceDir)),
+    ...getAllIgnorePaths(
+      platformName,
+      path.relative(projectRoot, sourceDir), // git expects relative paths
+      projectRoot,
+    ),
   ];
   const { output } = await spawn('git', [
     'clean',

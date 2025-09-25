@@ -28,6 +28,7 @@ const androidProject: AndroidProjectConfig = {
 const fingerprintOptions = {
   extraSources: [],
   ignorePaths: [],
+  env: [],
 };
 
 const spinnerMock = vi.hoisted(() => ({

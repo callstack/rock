@@ -13,7 +13,6 @@ import { findOutputFile } from '../run/findOutputFile.js';
 import { runHvigor } from '../runHvigor.js';
 
 export interface BuildFlags {
-  tasks?: Array<string>;
   buildMode: string;
   module: string;
   product: string;
@@ -31,7 +30,6 @@ export async function buildHarmony(
   remoteCacheProvider: null | (() => RemoteBuildCache) | undefined,
   fingerprintOptions: FingerprintSources,
 ) {
-  normalizeArgs(args);
   const { sourceDir, bundleName } = harmonyConfig;
   const artifactName = await formatArtifactName({
     platform: 'harmony',
@@ -48,30 +46,36 @@ export async function buildHarmony(
     sourceDir,
   });
   if (!binaryPath) {
-    // @todo revisit
     await runHvigor({ sourceDir, args, artifactName, bundleName });
   }
 
-  const outputFilePath =
-    binaryPath ?? (await findOutputFile(sourceDir, args.module));
-
-  if (outputFilePath) {
-    logger.log(
-      `Build available at: ${colorLink(relativeToCwd(outputFilePath))}`,
-    );
+  if (binaryPath) {
+    logger.log(`Build available at: ${colorLink(relativeToCwd(binaryPath))}`);
+  } else {
+    const signedHapPath = await findOutputFile(sourceDir, args.module, {
+      deviceId: undefined,
+      readableName: undefined,
+      type: 'phone',
+      connected: false,
+    });
+    if (signedHapPath) {
+      logger.log(
+        `Signed build available at: ${colorLink(relativeToCwd(signedHapPath))}`,
+      );
+    }
+    const unsignedHapPath = await findOutputFile(sourceDir, args.module, {
+      deviceId: undefined,
+      readableName: undefined,
+      type: 'emulator',
+      connected: false,
+    });
+    if (unsignedHapPath) {
+      logger.log(
+        `Unsigned build available at: ${colorLink(relativeToCwd(unsignedHapPath))}`,
+      );
+    }
   }
   outro('Success 🎉.');
-}
-
-function normalizeArgs(args: BuildFlags) {
-  if (args.tasks && args.buildMode) {
-    logger.warn(
-      'Both "--tasks" and "--build-mode" parameters were passed. Using "--tasks" for building the app.',
-    );
-  }
-  if (!args.buildMode) {
-    args.buildMode = 'debug';
-  }
 }
 
 export const options = [

@@ -74,7 +74,7 @@ export const logConfigPlugin =
       options: [
         {
           name: '-p, --platform <string>',
-          description: 'Select platform, e.g. ios or android',
+          description: 'Select platform, e.g. ios, android, or harmony',
         },
       ],
     });

@@ -1,7 +1,6 @@
-import type { AndroidProjectConfig } from '@react-native-community/cli-types';
 import { spawn } from '@rock-js/tools';
 import { test, vi } from 'vitest';
-import type { DeviceData } from '../listAndroidDevices.js';
+import type { DeviceData } from '../listHarmonyDevices.js';
 import type { Flags } from '../runHarmony.js';
 import { tryLaunchAppOnDevice } from '../tryLaunchAppOnDevice.js';
 
@@ -17,7 +16,7 @@ const OLD_ENV = process.env;
 beforeEach(() => {
   vi.clearAllMocks();
   vi.resetModules();
-  process.env = { ...OLD_ENV, ANDROID_HOME: '/mock/android/home' };
+  process.env = { ...OLD_ENV, DEVECO_SDK_HOME: '/mock/deveco/sdk' };
 });
 
 afterAll(() => {
@@ -25,137 +24,132 @@ afterAll(() => {
 });
 
 const device: DeviceData = {
-  deviceId: 'emulator-5554',
+  deviceId: '4UQ9K25710015363',
   readableName: 'Emulator 5554',
   connected: true,
   type: 'emulator',
 };
 
 const args: Flags = {
-  activeArchOnly: false,
   port: '8081',
-  appId: '',
-  appIdSuffix: '',
-  variant: 'debug',
+  buildMode: 'debug',
+  module: 'entry',
+  product: 'default',
+  ability: 'EntryAbility',
   local: true,
 };
 
-const androidProject: AndroidProjectConfig = {
-  sourceDir: '/Users/thymikee/Developer/tmp/App73/android',
-  appName: 'app',
-  packageName: 'com.myapp',
-  applicationId: 'com.myapp.custom',
-  mainActivity: '.MainActivity',
-  dependencyConfiguration: undefined,
-  watchModeCommandParams: undefined,
-  assets: [],
-};
+const bundleName = 'com.example.app';
 
-const shellStartCommand = ['-s', 'emulator-5554', 'shell', 'am', 'start'];
-const actionCategoryFlags = [
-  '-a',
-  'android.intent.action.MAIN',
-  '-c',
-  'android.intent.category.LAUNCHER',
-];
+test('launches hdc shell to force stop and start app on device', async () => {
+  await tryLaunchAppOnDevice(device, bundleName, args);
 
-test('launches adb shell with intent to launch com.myapp.MainActivity with different appId than packageName on a simulator', async () => {
-  await tryLaunchAppOnDevice(device, androidProject, args);
-
-  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
-    ...shellStartCommand,
-    '-n',
-    'com.myapp.custom/com.myapp.MainActivity',
-    ...actionCategoryFlags,
-  ]);
-});
-
-test('launches adb shell with intent to launch com.myapp.MainActivity with different appId than packageName on a simulator when mainActivity is fully qualified name', async () => {
-  await tryLaunchAppOnDevice(
-    device,
-    { ...androidProject, mainActivity: 'com.myapp.MainActivity' },
-    args,
+  expect(spawn).toHaveBeenCalledWith(
+    '/mock/deveco/sdk/default/openharmony/toolchains/hdc',
+    ['-t', '4UQ9K25710015363', 'shell', 'aa', 'force-stop', bundleName],
   );
 
-  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
-    ...shellStartCommand,
-    '-n',
-    'com.myapp.custom/com.myapp.MainActivity',
-    ...actionCategoryFlags,
-  ]);
+  expect(spawn).toHaveBeenCalledWith(
+    '/mock/deveco/sdk/default/openharmony/toolchains/hdc',
+    [
+      '-t',
+      '4UQ9K25710015363',
+      'shell',
+      'aa',
+      'start',
+      '-a',
+      'EntryAbility',
+      '-b',
+      bundleName,
+    ],
+  );
 });
 
-test('launches adb shell with intent to launch com.myapp.MainActivity with same appId as packageName on a simulator', async () => {
-  await tryLaunchAppOnDevice(
-    device,
-    { ...androidProject, applicationId: 'com.myapp' },
-    args,
+test('launches hdc shell with different ability name', async () => {
+  const customArgs = { ...args, ability: 'CustomAbility' };
+  await tryLaunchAppOnDevice(device, bundleName, customArgs);
+
+  expect(spawn).toHaveBeenCalledWith(
+    '/mock/deveco/sdk/default/openharmony/toolchains/hdc',
+    ['-t', '4UQ9K25710015363', 'shell', 'aa', 'force-stop', bundleName],
   );
 
-  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
-    ...shellStartCommand,
-    '-n',
-    'com.myapp/com.myapp.MainActivity',
-    ...actionCategoryFlags,
-  ]);
+  expect(spawn).toHaveBeenCalledWith(
+    '/mock/deveco/sdk/default/openharmony/toolchains/hdc',
+    [
+      '-t',
+      '4UQ9K25710015363',
+      'shell',
+      'aa',
+      'start',
+      '-a',
+      'CustomAbility',
+      '-b',
+      bundleName,
+    ],
+  );
 });
 
-test('launches adb shell with intent to launch com.myapp.MainActivity with different appId than packageName on a device', async () => {
-  await tryLaunchAppOnDevice(device, androidProject, args);
+test('launches hdc shell with different bundle name', async () => {
+  const customBundleName = 'com.custom.app';
+  await tryLaunchAppOnDevice(device, customBundleName, args);
 
-  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
-    ...shellStartCommand,
-    '-n',
-    'com.myapp.custom/com.myapp.MainActivity',
-    ...actionCategoryFlags,
-  ]);
-});
-
-test('launches adb shell with intent to launch fully specified activity with different appId than packageName and an app suffix on a device', async () => {
-  await tryLaunchAppOnDevice(
-    device,
-    {
-      ...androidProject,
-      mainActivity: 'com.zoontek.rnbootsplash.RNBootSplashActivity',
-    },
-    {
-      ...args,
-      appIdSuffix: 'dev',
-    },
+  expect(spawn).toHaveBeenCalledWith(
+    '/mock/deveco/sdk/default/openharmony/toolchains/hdc',
+    ['-t', '4UQ9K25710015363', 'shell', 'aa', 'force-stop', customBundleName],
   );
 
-  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
-    ...shellStartCommand,
-    '-n',
-    'com.myapp.custom.dev/com.zoontek.rnbootsplash.RNBootSplashActivity',
-    ...actionCategoryFlags,
-  ]);
+  expect(spawn).toHaveBeenCalledWith(
+    '/mock/deveco/sdk/default/openharmony/toolchains/hdc',
+    [
+      '-t',
+      '4UQ9K25710015363',
+      'shell',
+      'aa',
+      'start',
+      '-a',
+      'EntryAbility',
+      '-b',
+      customBundleName,
+    ],
+  );
 });
 
-test('--appId flag overwrites applicationId setting in androidProject', async () => {
-  await tryLaunchAppOnDevice(device, androidProject, {
-    ...args,
-    appId: 'my.app.id',
-  });
+test('launches hdc shell with different device id', async () => {
+  const customDevice = { ...device, deviceId: 'device-123' };
+  await tryLaunchAppOnDevice(customDevice, bundleName, args);
 
-  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
-    ...shellStartCommand,
-    '-n',
-    'my.app.id/com.myapp.MainActivity',
-    ...actionCategoryFlags,
-  ]);
+  expect(spawn).toHaveBeenCalledWith(
+    '/mock/deveco/sdk/default/openharmony/toolchains/hdc',
+    ['-t', 'device-123', 'shell', 'aa', 'force-stop', bundleName],
+  );
+
+  expect(spawn).toHaveBeenCalledWith(
+    '/mock/deveco/sdk/default/openharmony/toolchains/hdc',
+    [
+      '-t',
+      'device-123',
+      'shell',
+      'aa',
+      'start',
+      '-a',
+      'EntryAbility',
+      '-b',
+      bundleName,
+    ],
+  );
 });
 
-test('appIdSuffix Staging is appended to applicationId', async () => {
-  await tryLaunchAppOnDevice(device, androidProject, {
-    ...args,
-    appIdSuffix: 'Staging',
-  });
+test('returns applicationIdWithSuffix when successful', async () => {
+  const result = await tryLaunchAppOnDevice(device, bundleName, args);
 
-  expect(spawn).toHaveBeenCalledWith('/mock/android/home/platform-tools/adb', [
-    ...shellStartCommand,
-    '-n',
-    'com.myapp.custom.Staging/com.myapp.MainActivity',
-    ...actionCategoryFlags,
-  ]);
+  expect(result).toEqual({ applicationIdWithSuffix: bundleName });
+});
+
+test('handles device without deviceId gracefully', async () => {
+  const deviceWithoutId = { ...device, deviceId: undefined };
+  const result = await tryLaunchAppOnDevice(deviceWithoutId, bundleName, args);
+
+  expect(result).toEqual({});
+  expect(spawn).not.toHaveBeenCalled();
 });
