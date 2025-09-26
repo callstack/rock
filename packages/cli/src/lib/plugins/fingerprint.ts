@@ -15,6 +15,7 @@ import {
 type NativeFingerprintCommandOptions = {
   platform: 'ios' | 'android';
   raw?: boolean;
+  debug?: boolean;
 };
 
 export async function nativeFingerprintCommand(
@@ -34,17 +35,19 @@ export async function nativeFingerprintCommand(
       env,
     });
     console.log(fingerprint.hash);
-    // log sources to stderr to avoid polluting the standard output
-    console.error(
-      JSON.stringify(
-        {
-          hash: fingerprint.hash,
-          sources: fingerprint.inputs.filter((source) => source.hash != null),
-        },
-        null,
-        2,
-      ),
-    );
+    if (options.debug) {
+      // log sources to stderr to avoid polluting the standard output
+      console.error(
+        JSON.stringify(
+          {
+            hash: fingerprint.hash,
+            sources: fingerprint.inputs.filter((source) => source.hash != null),
+          },
+          null,
+          2,
+        ),
+      );
+    }
     return;
   }
 
@@ -109,6 +112,10 @@ export const fingerprintPlugin = () => (api: PluginApi) => {
       {
         name: '--raw',
         description: 'Output the raw fingerprint hash for piping',
+      },
+      {
+        name: '--debug',
+        description: 'Output additional debugging information',
       },
     ],
     args: [
