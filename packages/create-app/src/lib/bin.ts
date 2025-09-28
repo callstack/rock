@@ -2,15 +2,26 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
   cancelPromptAndExit,
+  copyDirSync,
+  gitInitStep,
+  hasGitClient,
+  isEmptyDirSync,
+  isGitDirty,
+  isGitRepo,
   isInteractive,
+  normalizeProjectName,
   promptConfirm,
+  removeDirSync,
+  renameCommonFiles,
+  replacePlaceholder,
   resolveAbsolutePath,
+  rewritePackageJson,
   RockError,
   spawn,
   spinner,
   type SupportedRemoteCacheProviders,
+  validateProjectName,
 } from '@rock-js/tools';
-import { gitInitStep, hasGitClient, isGitRepo } from './steps/git-init.js';
 import type { TemplateInfo } from './templates.js';
 import {
   BUNDLERS,
@@ -21,21 +32,11 @@ import {
   resolveTemplate,
   TEMPLATES,
 } from './templates.js';
-import {
-  renameCommonFiles,
-  replacePlaceholder,
-} from './utils/edit-template.js';
-import { copyDirSync, isEmptyDirSync, removeDirSync } from './utils/fs.js';
 import { getPkgManager } from './utils/getPkgManager.js';
 import { initInExistingProject } from './utils/initInExistingProject.js';
 import { migrateRnefProject } from './utils/migrateRnefProject.js';
-import { rewritePackageJson } from './utils/package-json.js';
 import { parseCliOptions } from './utils/parse-cli-options.js';
 import { parsePackageInfo } from './utils/parsers.js';
-import {
-  normalizeProjectName,
-  validateProjectName,
-} from './utils/project-name.js';
 import {
   confirmOverrideFiles,
   printByeMessage,
@@ -77,6 +78,7 @@ export async function run() {
 
   if (isRnefProject(projectRoot)) {
     await validateGitStatus(projectRoot);
+
     const shouldMigrate = await promptConfirm({
       message: `Detected existing RNEF project. Would you like to migrate it to Rock?`,
       confirmLabel: 'Yes',
@@ -225,11 +227,9 @@ function isRnefProject(dir: string) {
 
 async function validateGitStatus(dir: string) {
   if ((await isGitRepo(dir)) && (await hasGitClient())) {
-    const { output } = await spawn('git', ['status', '--porcelain'], {
-      cwd: dir,
-    });
+    const isDirty = await isGitDirty(dir);
 
-    if (output.trim() !== '') {
+    if (isDirty) {
       const shouldContinue = await promptConfirm({
         message: `Git has uncommitted changes. Would you like to continue with initializing Rock in existing project?`,
         confirmLabel: 'Yes',

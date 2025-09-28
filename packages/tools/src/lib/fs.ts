@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import nodePath from 'node:path';
 import { mergePackageJsons } from './package-json.js';
@@ -40,6 +41,14 @@ export function removeDirSync(path: string) {
   if (fs.existsSync(path)) {
     fs.rmSync(path, { recursive: true });
   }
+}
+
+export async function removeDirs(paths: string[]) {
+  return await Promise.all(
+    paths.map((dirPath) =>
+      fsPromises.rm(dirPath, { recursive: true, force: true }),
+    ),
+  );
 }
 
 export function walkDirectory(currentPath: string): string[] {
