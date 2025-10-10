@@ -7,8 +7,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "react": "19.1.0",
-    "react-native": "0.81.1"
+    "react": "19.1.1",
+    "react-native": "0.82.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -16,16 +16,16 @@
     "@babel/runtime": "^7.25.0",
     "rock": "^0.11.6",
     "@rock-js/welcome-screen": "^0.11.6",
-    "@react-native/babel-preset": "0.81.1",
-    "@react-native/eslint-config": "0.81.1",
-    "@react-native/typescript-config": "0.81.1",
-    "@types/react": "^19.1.0",
+    "@react-native/babel-preset": "0.82.0",
+    "@react-native/eslint-config": "0.82.0",
+    "@react-native/typescript-config": "0.82.0",
+    "@types/react": "^19.1.1",
     "@types/react-test-renderer": "^19.1.0",
     "babel-jest": "^29.6.3",
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
-    "react-test-renderer": "19.1.0",
+    "react-test-renderer": "19.1.1",
     "typescript": "^5.8.3"
   },
   "engines": {
