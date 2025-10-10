@@ -3,7 +3,7 @@ import { signAndroid } from './signAndroid.js';
 
 export type SignFlags = {
   verbose?: boolean;
-  apk: string;
+  path: string;
   output?: string;
   keystore?: string;
   keystorePassword?: string;
@@ -16,8 +16,8 @@ export type SignFlags = {
 
 const ARGUMENTS = [
   {
-    name: 'apk',
-    description: 'APK file path',
+    name: 'binaryPath',
+    description: 'Archive (apk or aab) file path',
   },
 ];
 
@@ -44,7 +44,7 @@ const OPTIONS = [
   },
   {
     name: '--output <string>',
-    description: 'Path to the output APK file.',
+    description: 'Path to the output APK/AAB file.',
   },
   {
     name: '--build-jsbundle',
@@ -66,9 +66,9 @@ export const registerSignCommand = (api: PluginApi) => {
     description: 'Sign the Android app with modified JS bundle.',
     args: ARGUMENTS,
     options: OPTIONS,
-    action: async (apkPath, flags: SignFlags) => {
+    action: async (binaryPath, flags: SignFlags) => {
       await signAndroid({
-        apkPath,
+        binaryPath,
         keystorePath: flags.keystore,
         keystorePassword: flags.keystorePassword,
         keyAlias: flags.keyAlias,

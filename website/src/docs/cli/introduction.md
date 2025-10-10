@@ -244,17 +244,17 @@ Same as for `build:android` and:
 
 ### `rock sign:android` Options
 
-The `sign:android <binaryPath>` command signs your Android app with a keystore, producing a signed APK file ready for distribution. It allows for replacing the JS bundle with a new version.
+The `sign:android <binaryPath>` command signs your Android app with a keystore, producing a signed APK or AAB file ready for distribution. It allows for replacing the JS bundle with a new version.
 
 | Argument     | Description          |
 | :----------- | :------------------- |
-| `binaryPath` | Path to the APK file |
+| `binaryPath` | Path to the APK or AAB file |
 
 | Option                         | Description                               |
 | :----------------------------- | :---------------------------------------- |
 | `--keystore <string>`          | Path to keystore file                     |
 | `--keystore-password <string>` | Password for keystore file                |
-| `--output <string>`            | Path to output APK file                   |
+| `--output <string>`            | Path to output APK or AAB file                   |
 | `--build-jsbundle`             | Build JS bundle before signing            |
 | `--jsbundle <string>`          | Path to JS bundle to apply before signing |
 | `--no-hermes`                  | Don't use Hermes for JS bundle            |
