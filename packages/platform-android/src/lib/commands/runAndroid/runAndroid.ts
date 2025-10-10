@@ -4,6 +4,7 @@ import type {
   AndroidProjectConfig,
   Config,
 } from '@react-native-community/cli-types';
+import type { StartDevServerArgs } from '@rock-js/config';
 import type { FingerprintSources, RemoteBuildCache } from '@rock-js/tools';
 import {
   color,
@@ -50,6 +51,9 @@ export async function runAndroid(
   projectRoot: string,
   remoteCacheProvider: null | (() => RemoteBuildCache) | undefined,
   fingerprintOptions: FingerprintSources,
+  startDevServer: (options: StartDevServerArgs) => void,
+  reactNativeVersion: string,
+  reactNativePath: string
 ) {
   intro('Running Android app');
 
@@ -75,6 +79,18 @@ export async function runAndroid(
     remoteCacheProvider,
     fingerprintOptions,
     sourceDir: androidProject.sourceDir,
+  });
+
+  logger.info('Starting dev server...');
+  startDevServer({
+    root: projectRoot,
+    reactNativePath,
+    reactNativeVersion,
+    platforms: { ios: {}, android: {} },
+    args: {
+      interactive: isInteractive(),
+      clientLogs: true,
+    },
   });
 
   if (device) {

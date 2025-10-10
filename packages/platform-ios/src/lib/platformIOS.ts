@@ -61,6 +61,8 @@ export const platformIOS =
           remoteCacheProvider: await api.getRemoteCacheProvider(),
           fingerprintOptions: api.getFingerprintOptions(),
           reactNativePath: api.getReactNativePath(),
+          reactNativeVersion: api.getReactNativeVersion(),
+          startDevServer: api.getBundlerStart(),
         });
         outro('Success 🎉.');
       },

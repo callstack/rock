@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import type { StartDevServerArgs } from '@rock-js/config';
 import type { FingerprintSources, RemoteBuildCache } from '@rock-js/tools';
 import {
   color,
@@ -34,6 +35,8 @@ export const createRun = async ({
   remoteCacheProvider,
   fingerprintOptions,
   reactNativePath,
+  reactNativeVersion,
+  startDevServer,
 }: {
   platformName: ApplePlatform;
   projectConfig: ProjectConfig;
@@ -42,8 +45,24 @@ export const createRun = async ({
   remoteCacheProvider: null | (() => RemoteBuildCache) | undefined;
   fingerprintOptions: FingerprintSources;
   reactNativePath: string;
+  reactNativeVersion: string;
+  startDevServer?: (options: StartDevServerArgs) => void;
 }) => {
   validateArgs(args, projectRoot);
+
+  if (startDevServer) {
+    logger.info('Starting dev server...');
+    startDevServer({
+      root: projectRoot,
+      reactNativePath,
+      reactNativeVersion,
+      platforms: { ios: {}, android: {} },
+      args: {
+        interactive: isInteractive(),
+        clientLogs: true,
+      },
+    });
+  }
 
   const deviceOrSimulator = args.destination
     ? // there can be multiple destinations, so we'll pick the first one
